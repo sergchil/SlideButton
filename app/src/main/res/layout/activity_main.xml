@@ -19,7 +19,7 @@
         android:layout_marginBottom="20dp"
         android:text="Progress: 0"/>
 
-    <com.rojoxpress.slidebutton.SlideButton
+    <com.rojoxpress.slidebutton.SliderButton
         android:layout_width="match_parent"
         app:text="Slide to unlock"
         android:id="@+id/slide_button"

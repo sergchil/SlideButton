@@ -7,7 +7,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rojoxpress.slidebutton.SlideButton;
+import com.rojoxpress.slidebutton.SliderButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,17 +16,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final TextView textView = (TextView) findViewById(R.id.progress);
-        final SlideButton slideButton = (SlideButton) findViewById(R.id.slide_button);
+        final SliderButton slideButton = (SliderButton) findViewById(R.id.slide_button);
         SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.switch_);
 
-        slideButton.setSlideButtonListener(new SlideButton.SlideButtonListener() {
+        slideButton.setSlideButtonListener(new SliderButton.SlideButtonListener() {
             @Override
             public void onSlide() {
                 Toast.makeText(MainActivity.this,"UNLOCKED",Toast.LENGTH_SHORT).show();
             }
         });
 
-        slideButton.setOnSlideChangeListener(new SlideButton.OnSlideChangeListener() {
+        slideButton.setOnSlideChangeListener(new SliderButton.OnSlideChangeListener() {
             @Override
             public void onSlideChange(float position) {
                 textView.setText("Progress: "+position);

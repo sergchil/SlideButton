@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="slider_button">
+    <declare-styleable name="SliderButton">
         <attr name="text" format="string"/>
         <attr name="textSize" format="dimension"/>
         <attr name="textColor" format="integer"/>

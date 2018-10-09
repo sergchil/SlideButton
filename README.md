@@ -13,7 +13,7 @@ SlideButton is a button that needs a swipe-gesture to confirm an action. Just li
 ## Usage
 Simply add the View to your layout:
 ```xml
-<com.rojoxpress.slidebutton.SlideButton
+<com.rojoxpress.slidebutton.SliderButton
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="@drawable/back_slide_button"
