@@ -1,7 +1,11 @@
 package com.rojoxpress.slidebutton
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -24,7 +28,7 @@ open class SliderButton : FrameLayout {
 
     private lateinit var texView: TextView
     private lateinit var slideBar: SlideBar
-    private var listener: SlideButtonListener? = null
+    private var onSlideComplete: OnSlideCompleteListener? = null
     private var slideChangeListener: OnSlideChangeListener? = null
     private var offsetThumb: Int = 0
 
@@ -48,14 +52,9 @@ open class SliderButton : FrameLayout {
         init(attrs)
     }
 
+    private fun init(set: AttributeSet?) {
 
-    fun dpToPixels(dp: Int): Int {
-        return (dp * context.resources.displayMetrics.density).toInt()
-    }
-
-    fun init(set: AttributeSet?) {
-
-        offsetThumb = dpToPixels(16)
+        offsetThumb = 16.dp
         texView = TextView(context)
         slideBar = SlideBar(context)
 
@@ -78,15 +77,14 @@ open class SliderButton : FrameLayout {
             }
 
             if (a.hasValue(R.styleable.SliderButton_thumb)) {
-                val thumbDrawable: Drawable?
-                thumbDrawable = a.getDrawable(R.styleable.SliderButton_thumb)
+                val thumbDrawable: Drawable? = a.getDrawable(R.styleable.SliderButton_thumb)
                 slideBar.thumb = thumbDrawable
             } else {
                 slideBar.thumb = ContextCompat.getDrawable(context, R.drawable.thumb_def)
             }
 
             if (a.hasValue(R.styleable.SliderButton_thumbOffset)) {
-                val offset = a.getDimensionPixelSize(R.styleable.SliderButton_thumbOffset, dpToPixels(10))
+                val offset = a.getDimensionPixelSize(R.styleable.SliderButton_thumbOffset, 10.dp)
                 offsetThumb += offset
             }
 
@@ -96,7 +94,7 @@ open class SliderButton : FrameLayout {
                 ViewCompat.setBackground(this, ContextCompat.getDrawable(context, R.drawable.back_slide_button))
             }
 
-            val unitsTextSize = a.getDimensionPixelSize(R.styleable.SliderButton_textSize, dpToPixels(20)).toFloat()
+            val unitsTextSize = a.getDimensionPixelSize(R.styleable.SliderButton_textSize, 20.dp).toFloat()
 
             texView.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitsTextSize)
 
@@ -107,17 +105,6 @@ open class SliderButton : FrameLayout {
         }
 
         setThumbOffset(offsetThumb)
-
-        /*post(new Runnable() {
-            @Override
-            public void run() {
-                Drawable drawable = slideBar.thumb;
-                if(drawable != null){
-                    Drawable n = new ScaleDrawable(drawable,Gravity.CENTER,getHeight(),getHeight());
-                    slideBar.setThumb(n);
-                }
-            }
-        });*/
 
         this.addView(texView)
         this.addView(slideBar)
@@ -144,6 +131,10 @@ open class SliderButton : FrameLayout {
         this.slideChangeListener = slideChangeListener
     }
 
+    fun setSlideButtonListener(listener: OnSlideCompleteListener) {
+        this.onSlideComplete = listener
+    }
+
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         slideBar.isEnabled = enabled
@@ -155,8 +146,7 @@ open class SliderButton : FrameLayout {
         } else {
             texView.visibility = View.VISIBLE
         }
-        slideBar.thumb!!.setColorFilter(color, PorterDuff.Mode.XOR)
-
+        slideBar.thumb?.setColorFilter(color, PorterDuff.Mode.XOR)
     }
 
 
@@ -182,13 +172,17 @@ open class SliderButton : FrameLayout {
             init()
         }
 
-
         constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
             init()
         }
 
         constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
             init()
+        }
+
+        fun init() {
+            max = 100
+            setOnSeekBarChangeListener(seekBarChangeListener)
         }
 
         override fun setThumb(thumb: Drawable?) {
@@ -200,53 +194,83 @@ open class SliderButton : FrameLayout {
             return thumb
         }
 
-        fun init() {
-            max = 100
-            setOnSeekBarChangeListener(seekBarChangeListener)
-        }
-
-
         override fun onTouchEvent(event: MotionEvent): Boolean {
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                if (thumb!!.bounds.contains(event.x.toInt(), event.y.toInt())) {
-                    super.onTouchEvent(event)
-                } else
-                    return false
-            } else if (event.action == MotionEvent.ACTION_UP) {
-                if (progress > 90)
-                    onSlide()
 
-                progress = 0
-            } else
-                super.onTouchEvent(event)
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val draggableView = thumb ?: return false
+
+                if (!draggableView.bounds.contains(event.x.toInt(), event.y.toInt())) {
+                    return false
+                }
+            }
+
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (progress > 90) {
+                    slideToComplete()
+                } else {
+                    reset()
+                }
+
+                return true
+            }
+
+
+            super.onTouchEvent(event)
 
             return true
         }
 
-        private fun onSlide() {
-            if (listener != null) {
-                listener!!.onSlide()
+        private fun slideToComplete() {
+            val valueAnimator = ValueAnimator.ofInt(progress, max)
+            valueAnimator.duration = 50
+            valueAnimator.addUpdateListener {
+                val animatedValue = it.animatedValue as Int
+                progress = animatedValue
             }
+
+            valueAnimator.addListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    onSlideComplete()
+//                    reset()
+                }
+            })
+            valueAnimator.start()
+        }
+
+        private fun onSlideComplete() {
+            onSlideComplete?.onSlideComplete()
         }
 
         private fun onSlideChange(position: Float) {
-            if (slideChangeListener != null) {
-                slideChangeListener!!.onSlideChange(position)
+            slideChangeListener?.onSlideChange(position)
+        }
+
+        private fun reset() {
+
+            val valueAnimator = ValueAnimator.ofInt(progress, 0)
+            valueAnimator.duration = 120
+            valueAnimator.addUpdateListener {
+                val animatedValue = it.animatedValue as Int
+                progress = animatedValue
             }
+            valueAnimator.start()
         }
 
     }
 
-    fun setSlideButtonListener(listener: SlideButtonListener) {
-        this.listener = listener
-    }
-
-    interface SlideButtonListener {
-        fun onSlide()
+    interface OnSlideCompleteListener {
+        fun onSlideComplete()
     }
 
     interface OnSlideChangeListener {
         fun onSlideChange(position: Float)
     }
+
+    // dp to pixels
+    val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+    // float dp to pixels
+    val Float.dp: Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
 
 }
