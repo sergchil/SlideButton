@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#dfdfdf"
+    android:orientation="vertical">
+
+    <com.rojoxpress.slidebutton.Slider
+        android:id="@+id/__slider"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:background="@drawable/back_slide_button"
+        android:max="100"
+        android:progressDrawable="@drawable/back_slide_layer"
+        android:thumb="@drawable/thumb_def"
+        android:thumbOffset="-4dp" />
+
+    <TextView
+        android:id="@+id/__slider_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        tools:text="slide" />
+
+
+</FrameLayout>
