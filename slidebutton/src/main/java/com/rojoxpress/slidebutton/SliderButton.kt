@@ -1,5 +1,6 @@
 package com.rojoxpress.slidebutton
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -8,10 +9,12 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
+import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.slider_main.view.*
@@ -111,7 +114,15 @@ class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     fun onSlideComplete(completeListener: (() -> Unit)?) {
-        _slider.onSlideComplete = completeListener
+        _slider.onSlideComplete =  {
+
+            TransitionManager.beginDelayedTransition(_slider.parent as ViewGroup)
+            _slider.visibility = View.INVISIBLE
+            _texView.visibility = View.INVISIBLE
+            __actions_container.visibility = View.VISIBLE
+
+            completeListener?.invoke()
+        }
     }
 
 }
