@@ -4,8 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import android.support.annotation.*
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.transition.AutoTransition
@@ -82,6 +81,7 @@ class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
+    //region SLIDER TITLE
     fun setSliderTitle(@StringRes res: Int) {
         _sliderTitle.setText(res)
     }
@@ -90,10 +90,24 @@ class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeS
         _sliderTitle.text = charSequence ?: ""
     }
 
-    fun setThumb(drawable: Drawable?) {
-        _slider.thumb = drawable ?: return
+    fun setSliderTextSizeRes(@DimenRes dimenId: Int) {
+        _sliderTitle.textSize = context.resources.getDimension(dimenId)
     }
 
+    fun setSliderTextSize(size: Float) {
+        _sliderTitle.textSize = size
+    }
+
+    fun setSliderTextColorRes(@ColorRes resId: Int) {
+        _sliderTitle.setTextColor(ContextCompat.getColor(context, resId))
+    }
+
+    fun setSliderTextColor(@ColorInt color: Int) {
+        _sliderTitle.setTextColor(color)
+    }
+    //endregion
+
+    //region SLIDER THUMB
     fun setThumb(@DrawableRes drawableRes: Int) {
         _slider.thumb = ContextCompat.getDrawable(context, drawableRes) ?: return
     }
@@ -101,6 +115,73 @@ class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeS
     fun setThumbOffset(offset: Int) {
         _slider.thumbOffset = offset
     }
+    //endregion
+
+    //region SLIDER BACKGROUND
+    fun setSliderBackgroundDrawableRes(@DrawableRes resId: Int) {
+        _slider.setBackgroundResource(resId)
+    }
+
+    fun setSliderBackgroundColorRes(@ColorRes resId: Int) {
+        _slider.setBackgroundColor(ContextCompat.getColor(context, resId))
+    }
+
+    fun setSliderBackgroundColor(color: Int) {
+        _slider.setBackgroundColor(color)
+    }
+    //endregion
+
+    //region POSITIVE BUTTON
+    fun setPositiveButtonText(@StringRes res: Int) {
+        _positiveButton.setText(res)
+    }
+
+    fun setPositiveButtonText(charSequence: String?) {
+        _positiveButton.text = charSequence ?: ""
+    }
+
+    fun setPositiveButtonTextSizeRes(@DimenRes dimenId: Int) {
+        _positiveButton.textSize = context.resources.getDimension(dimenId)
+    }
+
+    fun setPositiveButtonTextSize(size: Float) {
+        _positiveButton.textSize = size
+    }
+
+    fun setPositiveButtonTextColorRes(@ColorRes resId: Int) {
+        _positiveButton.setTextColor(ContextCompat.getColor(context, resId))
+    }
+
+    fun setPositiveButtonTextColor(@ColorInt color: Int) {
+        _positiveButton.setTextColor(color)
+    }
+    //endregion
+
+    //region NEGATIVE BUTTON
+    fun setNegativeButtonText(@StringRes res: Int) {
+        _negativeButton.setText(res)
+    }
+
+    fun setNegativeButtonText(charSequence: String?) {
+        _negativeButton.text = charSequence ?: ""
+    }
+
+    fun setNegativeButtonTextSizeRes(@DimenRes dimenId: Int) {
+        _negativeButton.textSize = context.resources.getDimension(dimenId)
+    }
+
+    fun setNegativeButtonTextSize(size: Float) {
+        _negativeButton.textSize = size
+    }
+
+    fun setNegativeButtonTextColorRes(@ColorRes resId: Int) {
+        _negativeButton.setTextColor(ContextCompat.getColor(context, resId))
+    }
+
+    fun setNegativeButtonTextColor(@ColorInt color: Int) {
+        _negativeButton.setTextColor(color)
+    }
+    //endregion
 
     override fun setEnabled(enabled: Boolean) {
         TransitionManager.beginDelayedTransition(_slider.parent as ViewGroup)
