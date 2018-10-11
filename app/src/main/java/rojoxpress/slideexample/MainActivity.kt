@@ -26,6 +26,17 @@ class MainActivity : AppCompatActivity() {
             textView.text = "Progress: $position"
         }
 
-        switchCompat.setOnCheckedChangeListener { compoundButton, b -> slideButton.isEnabled = b }
+        slideButton.onPositiveClick {
+//            slideButton.toggleActions()
+        }
+
+        slideButton.onNegativeClick {
+            slideButton.resetSlider()
+        }
+
+        switchCompat.setOnCheckedChangeListener { compoundButton, b ->
+            slideButton.isEnabled = b
+//            slideButton.toggleActions()
+        }
     }
 }

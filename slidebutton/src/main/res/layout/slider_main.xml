@@ -9,28 +9,30 @@
 
     <LinearLayout
         android:id="@+id/__actions_container"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <Button
-            android:background="#26ff84"
+            android:id="@+id/__slider_negative_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:layout_weight="1"
+            android:background="#26ff84"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Cancel" />
+            tools:text="Cancel" />
 
         <Button
-            android:background="#ff6969"
+            android:id="@+id/__slider_positive_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="2dp"
             android:layout_weight="1"
+            android:background="#ff6969"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Confirm" />
+            tools:text="Confirm" />
 
     </LinearLayout>
 
@@ -43,8 +45,7 @@
         android:max="100"
         android:progressDrawable="@drawable/back_slide_layer"
         android:thumb="@drawable/thumb_def"
-        android:thumbOffset="-4dp"
-         />
+        android:thumbOffset="-4dp" />
 
     <TextView
         android:id="@+id/__slider_title"

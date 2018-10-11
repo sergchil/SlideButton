@@ -1,44 +1,59 @@
 package com.rojoxpress.slidebutton
 
-import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
+import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.slider_main.view.*
 
 class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private var _texView: TextView
-    private var _slider: Slider
+    private val _sliderTitle: TextView
+    private val _slider: Slider
+    private val _actionsContainer: ViewGroup
+    private val _positiveButton: Button
+    private val _negativeButton: Button
 
-    private var offsetThumb: Int = 0
+    private var onPositiveClickListener: (() -> Unit)? = null
+    private var onNegativeClickListener: (() -> Unit)? = null
+
+    // called after showing actions container to reset slider
+    private val endTransition = with(AutoTransition()) {
+        addListener(SimpleTransitionEndListener(this@SliderButton::onTransitionEnd))
+    }
 
     init {
-
         val parent = LayoutInflater.from(context).inflate(R.layout.slider_main, this, true)
-
         _slider = parent.__slider
-        _texView = parent.__slider_title
+        _sliderTitle = parent.__slider_title
+
+        _actionsContainer = parent.__actions_container
+
+        _positiveButton = parent.__slider_positive_button
+        _positiveButton.setOnClickListener { onPositiveClickListener?.invoke() }
+
+        _negativeButton = parent.__slider_negative_button
+        _negativeButton.setOnClickListener { onNegativeClickListener?.invoke() }
 
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.SliderButton, 0, 0)
 
             if (a.hasValue(R.styleable.SliderButton_text)) {
                 val buttonText = a.getString(R.styleable.SliderButton_text)
-                setText(buttonText)
+                setSliderTitle(buttonText)
             }
 
             if (a.hasValue(R.styleable.SliderButton_thumb)) {
@@ -48,7 +63,6 @@ class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeS
 
             if (a.hasValue(R.styleable.SliderButton_thumbOffset)) {
                 val offset = a.getDimensionPixelSize(R.styleable.SliderButton_thumbOffset, 10.dp)
-                offsetThumb += offset
             }
 
             if (a.hasValue(R.styleable.SliderButton_sliderBackground)) {
@@ -59,76 +73,93 @@ class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeS
 
             val unitsTextSize = a.getDimensionPixelSize(R.styleable.SliderButton_textSize, 20.dp).toFloat()
 
-            _texView.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitsTextSize)
+            _sliderTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitsTextSize)
 
             val color = a.getColor(R.styleable.SliderButton_textColor, Color.WHITE)
-            _texView.setTextColor(color)
+            _sliderTitle.setTextColor(color)
 
             a.recycle()
         }
-
-//        setThumbOffset(offsetThumb)
-
     }
 
-    fun setText(@StringRes res: Int) {
-        _texView.setText(res)
+    fun setSliderTitle(@StringRes res: Int) {
+        _sliderTitle.setText(res)
     }
 
-    fun setText(charSequence: CharSequence?) {
-        _texView.text = charSequence
+    fun setSliderTitle(charSequence: String?) {
+        _sliderTitle.text = charSequence ?: ""
     }
 
-    fun setThumb(drawable: Drawable) {
-        _slider.thumb = drawable
+    fun setThumb(drawable: Drawable?) {
+        _slider.thumb = drawable ?: return
+    }
+
+    fun setThumb(@DrawableRes drawableRes: Int) {
+        _slider.thumb = ContextCompat.getDrawable(context, drawableRes) ?: return
     }
 
     fun setThumbOffset(offset: Int) {
         _slider.thumbOffset = offset
     }
 
-
     override fun setEnabled(enabled: Boolean) {
+        TransitionManager.beginDelayedTransition(_slider.parent as ViewGroup)
         super.setEnabled(enabled)
         _slider.isEnabled = enabled
-        _texView.isEnabled = enabled
+        _sliderTitle.isEnabled = enabled
         var color = 0
         if (!enabled) {
             color = ContextCompat.getColor(context, R.color.disabled_filter)
-            _texView.visibility = View.GONE
+            _sliderTitle.invisible()
         } else {
-            _texView.visibility = View.VISIBLE
+            _sliderTitle.show()
         }
         _slider.thumb?.setColorFilter(color, PorterDuff.Mode.XOR)
     }
 
+    fun resetSlider() {
+        TransitionManager.beginDelayedTransition(_slider.parent as ViewGroup)
+        _actionsContainer.invisible()
+        _slider.show()
+        _sliderTitle.show()
+    }
 
+    //region LISTENERS
     fun onSliderPositionChange(slideChangeListener: ((position: Float) -> Unit)?) {
-        _slider.slideChangeListener = {
-            _texView.alpha = Math.min(1 - (it * 2), 1f)
-            _texView.translationX = it * 300
-
+        _slider.onSlideChangeListener = {
+            val calculatedAlpha = 1 - (it * 2) // change alpha 2x faster
+            _sliderTitle.alpha = Math.min(calculatedAlpha, 1f)
+            _sliderTitle.translationX = it * 300
 
             slideChangeListener?.invoke(it)
         }
     }
 
     fun onSlideComplete(completeListener: (() -> Unit)?) {
-        _slider.onSlideComplete =  {
+        _slider.onSlideCompleteListener = {
 
-            TransitionManager.beginDelayedTransition(_slider.parent as ViewGroup)
-            _slider.visibility = View.INVISIBLE
-            _texView.visibility = View.INVISIBLE
-            __actions_container.visibility = View.VISIBLE
+            TransitionManager.beginDelayedTransition(_slider.parent as ViewGroup, endTransition) // reset slider to initial position after end
+            _slider.invisible()
+            _sliderTitle.invisible()
+            _actionsContainer.show()
 
             completeListener?.invoke()
         }
     }
 
+    fun onNegativeClick(block: (() -> Unit)?) {
+        this.onNegativeClickListener = block
+    }
+
+    fun onPositiveClick(block: (() -> Unit)?) {
+        this.onPositiveClickListener = block
+    }
+
+    // called after showing actions container to reset slider
+    private fun onTransitionEnd() {
+        _slider.reset(false)
+    }
+
+    //endregion
 }
 
-// dp to pixels
-val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
-
-// float dp to pixels
-val Float.dp: Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
