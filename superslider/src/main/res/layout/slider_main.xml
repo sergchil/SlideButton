@@ -39,7 +39,7 @@
     </LinearLayout>
 
 
-    <com.rojoxpress.slidebutton.Slider
+    <com.chilisoft.superslider.Slider
         android:id="@+id/__slider"
         android:layout_width="match_parent"
         android:layout_height="50dp"

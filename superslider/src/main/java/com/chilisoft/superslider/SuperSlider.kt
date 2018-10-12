@@ -1,4 +1,4 @@
-package com.rojoxpress.slidebutton
+package com.chilisoft.superslider
 
 import android.content.Context
 import android.graphics.Color
@@ -18,13 +18,13 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.slider_main.view.*
 
-class SliderButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
+class SuperSlider @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
 
     private var onPositiveClickListener: (() -> Unit)? = null
     private var onNegativeClickListener: (() -> Unit)? = null
     private val endTransition = with(AutoTransition()) {
         // called after showing actions container to reset slider
-        addListener(SimpleTransitionEndListener(this@SliderButton::onTransitionEnd))
+        addListener(SimpleTransitionEndListener(this@SuperSlider::onTransitionEnd))
     }
 
     private val _sliderTitle: TextView

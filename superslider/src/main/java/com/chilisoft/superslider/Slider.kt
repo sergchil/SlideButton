@@ -1,4 +1,4 @@
-package com.rojoxpress.slidebutton
+package com.chilisoft.superslider
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
