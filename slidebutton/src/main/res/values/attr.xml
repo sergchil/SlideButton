@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SliderButton">
-        <attr name="text" format="string"/>
-        <attr name="textSize" format="dimension"/>
-        <attr name="textColor" format="integer"/>
-        <attr name="thumbOffset" format="dimension"/>
-        <attr name="thumb" format="integer"/>
-        <attr name="sliderBackground" format="integer"/>
+        <attr name="sliderText" format="reference|string" />
+        <attr name="sliderTextSize" format="reference|dimension" />
+        <attr name="sliderTextColor" format="reference|color" />
+
+        <attr name="sliderBackground" format="reference|color" />
+        <attr name="sliderThumbDrawable" format="reference" />
+        <attr name="sliderThumbOffset" format="reference|dimension" />
+
+        <attr name="sliderHeight" format="reference|dimension" />
+
+        <attr name="positiveButtonText" format="string|reference" />
+        <attr name="positiveButtonTextSize" format="dimension|reference" />
+        <attr name="positiveButtonTextColor" format="color|reference" />
+        <attr name="positiveButtonBackground" format="reference|color" />
+
+        <attr name="negativeButtonText" format="string|reference" />
+        <attr name="negativeButtonTextSize" format="dimension|reference" />
+        <attr name="negativeButtonTextColor" format="color|reference" />
+        <attr name="negativeButtonBackground" format="reference|color" />
+
+        <attr name="completionThreshold" format="integer" />
+
+
     </declare-styleable>
 </resources>

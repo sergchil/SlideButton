@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         val slideButton = slide_button
         val switchCompat = switch_
 
-
         slideButton.onSlideComplete {
             Toast.makeText(this@MainActivity, "UNLOCKED", Toast.LENGTH_SHORT).show()
         }
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         slideButton.onPositiveClick {
-//            slideButton.toggleActions()
+            //            slideButton.toggleActions()
         }
 
         slideButton.onNegativeClick {

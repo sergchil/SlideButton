@@ -3,6 +3,7 @@ package com.rojoxpress.slidebutton
 import android.content.res.Resources
 import android.transition.Transition
 import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 
 /**
@@ -12,9 +13,12 @@ import android.widget.SeekBar
 
 // dp to pixels
 val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
-
-// float dp to pixels
 val Float.dp: Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+// sp to pixels
+val Float.sp: Int get() = (this * Resources.getSystem().displayMetrics.scaledDensity + 0.5f).toInt()
+val Int.sp: Int get() = (this * Resources.getSystem().displayMetrics.scaledDensity + 0.5f).toInt()
+
 
 fun View.show() {
     visibility = View.VISIBLE
@@ -66,4 +70,12 @@ internal class SimpleTransitionStartListener(val onStart: () -> Unit) : Transiti
     override fun onTransitionCancel(transition: Transition?) {}
 
     override fun onTransitionStart(transition: Transition?) { onStart() }
+}
+
+fun View.setHeight(height: Int) {
+    if (layoutParams is ViewGroup.LayoutParams) {
+        val params = layoutParams
+        params.height = height
+        requestLayout()
+    }
 }

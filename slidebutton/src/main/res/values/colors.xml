@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="disabled_filter">#92ffffff</color>
+    <color name="positive_button_bg_color">#00ff08</color>
+    <color name="negative_button_bg_color">#cccccc</color>
+
+
+
 </resources>

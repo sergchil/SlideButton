@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#dfdfdf"
     android:layout_height="match_parent"
+    android:background="#dfdfdf"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -20,11 +20,18 @@
         android:layout_marginBottom="20dp"
         android:text="Progress: 0" />
 
+
     <com.rojoxpress.slidebutton.SliderButton
         android:id="@+id/slide_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:text="Slide to unlock" />
+        app:negativeButtonText="negative"
+        app:positiveButtonText="positive"
+        app:sliderBackground="@drawable/default_slider_bg"
+        app:sliderHeight="50dp"
+        app:sliderText="Progress >>"
+        app:sliderTextSize="14sp" />
+
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/switch_"
