@@ -75,28 +75,28 @@ class SuperSlider @JvmOverloads constructor(context: Context, attrs: AttributeSe
         _negativeButton.setOnClickListener { onNegativeClickListener?.invoke() }
 
         if (attrs != null) {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.SliderButton, defStyleAttr, 0)
+            val a = context.obtainStyledAttributes(attrs, R.styleable.SuperSlider, defStyleAttr, 0)
 
-            setSliderText(a.getString(R.styleable.SliderButton_sliderText))
-            setSliderTextSize(a.getDimension(R.styleable.SliderButton_sliderTextSize, _defaultSliderTextSize))
-            setSliderTextColor(a.getColor(R.styleable.SliderButton_sliderTextColor, _defaultSliderTextColor))
-            setSliderHeight(a.getDimension(R.styleable.SliderButton_sliderHeight, _defaultSliderHeight).toInt())
-            setSliderBackgroundDrawable(a.getDrawable(R.styleable.SliderButton_sliderBackground))
-            setSliderThumbDrawable(a.getDrawable(R.styleable.SliderButton_sliderThumbDrawable))
+            setSliderText(a.getString(R.styleable.SuperSlider_sliderText))
+            setSliderTextSize(a.getDimension(R.styleable.SuperSlider_sliderTextSize, _defaultSliderTextSize))
+            setSliderTextColor(a.getColor(R.styleable.SuperSlider_sliderTextColor, _defaultSliderTextColor))
+            setSliderHeight(a.getDimension(R.styleable.SuperSlider_sliderHeight, _defaultSliderHeight).toInt())
+            setSliderBackgroundDrawable(a.getDrawable(R.styleable.SuperSlider_sliderBackground))
+            setSliderThumbDrawable(a.getDrawable(R.styleable.SuperSlider_sliderThumbDrawable))
             _slider.progressDrawable = _defaultSliderProgress // not customizable
-            setSliderThumbOffset(a.getDimension(R.styleable.SliderButton_sliderThumbOffset, _defaultSliderThumbOffset).toInt()) // should be called after setting drawable
+            setSliderThumbOffset(a.getDimension(R.styleable.SuperSlider_sliderThumbOffset, _defaultSliderThumbOffset).toInt()) // should be called after setting drawable
 
-            setPositiveButtonText(a.getString(R.styleable.SliderButton_positiveButtonText))
-            setPositiveButtonTextSize(a.getDimension(R.styleable.SliderButton_positiveButtonTextSize, _defaultPositiveButtonTextSize))
-            setPositiveButtonTextColor(a.getColor(R.styleable.SliderButton_positiveButtonTextColor, _defaultPositiveButtonTextColor))
-            setPositiveButtonBackgroundDrawable(a.getDrawable(R.styleable.SliderButton_positiveButtonBackground))
+            setPositiveButtonText(a.getString(R.styleable.SuperSlider_positiveButtonText))
+            setPositiveButtonTextSize(a.getDimension(R.styleable.SuperSlider_positiveButtonTextSize, _defaultPositiveButtonTextSize))
+            setPositiveButtonTextColor(a.getColor(R.styleable.SuperSlider_positiveButtonTextColor, _defaultPositiveButtonTextColor))
+            setPositiveButtonBackgroundDrawable(a.getDrawable(R.styleable.SuperSlider_positiveButtonBackground))
 
-            setNegativeButtonText(a.getString(R.styleable.SliderButton_negativeButtonText))
-            setNegativeButtonTextSize(a.getDimension(R.styleable.SliderButton_negativeButtonTextSize, _defaultNegativeButtonTextSize))
-            setNegativeButtonTextColor(a.getColor(R.styleable.SliderButton_negativeButtonTextColor, _defaultNegativeButtonTextColor))
-            setNegativeButtonBackgroundDrawable(a.getDrawable(R.styleable.SliderButton_negativeButtonBackground))
+            setNegativeButtonText(a.getString(R.styleable.SuperSlider_negativeButtonText))
+            setNegativeButtonTextSize(a.getDimension(R.styleable.SuperSlider_negativeButtonTextSize, _defaultNegativeButtonTextSize))
+            setNegativeButtonTextColor(a.getColor(R.styleable.SuperSlider_negativeButtonTextColor, _defaultNegativeButtonTextColor))
+            setNegativeButtonBackgroundDrawable(a.getDrawable(R.styleable.SuperSlider_negativeButtonBackground))
 
-            setCompleteThreshold(a.getInteger(R.styleable.SliderButton_completionThreshold, _slider.COMPLETE_TRESHOLD))
+            setCompleteThreshold(a.getInteger(R.styleable.SuperSlider_completionThreshold, _slider.COMPLETE_TRESHOLD))
 
 
             a.recycle()
